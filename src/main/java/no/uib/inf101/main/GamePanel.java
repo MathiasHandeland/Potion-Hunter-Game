@@ -27,12 +27,8 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileManager = new TileManager(this);
     GameController controller = new GameController();
     Thread gameThread;
-    Player player = new Player(this, controller); // this er Gamepanel klassen
-
-    // set character's default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    public CollisionChecker collisionChecker = new CollisionChecker(this);
+    public Player player = new Player(this, controller); // this er Gamepanel klassen
 
     public GamePanel() {
 
@@ -72,6 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
+
+        // stop player from moving in the wall of the maze
+        
     }
 
     public void paintComponent(Graphics g) {

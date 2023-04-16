@@ -1,6 +1,7 @@
 package no.uib.inf101.entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -18,14 +19,21 @@ public class Player extends Entity {
         this.gamePanel = gamePanel;
         this.controller = controller;
 
+        // TODO endre disse
+        solidArea = new Rectangle();
+        solidArea.x = 0;
+        solidArea.y = 0;
+        solidArea.width = 48;
+        solidArea.height = 48;
+
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-
-        x = 100;
-        y = 100;
+        // set default player position in the middle of the screen
+        x = 336;
+        y = 240;
         speed = 4;
         direction = "down"; // default direction
     }
@@ -46,32 +54,50 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-
-    // method that stops the player from moving outside the screen
     
-
     public void update() {
 
         if (controller.upPressed || controller.downPressed || controller.leftPressed || controller.rightPressed) {
 
             if (controller.upPressed == true) {
                 direction = "up";
-                y -= speed;
             }
             else if (controller.downPressed == true) {
                 direction = "down";
-                y += speed;
             }
             else if (controller.leftPressed == true) {
                 direction = "left";
-                x -= speed;
             }
             else if (controller.rightPressed == true) {
                 direction = "right";
-                x += speed;
             }
 
             stopPlayerFromMovingOutsideScreen();
+
+            // CHECK TILE COLLISION
+            collisionOn = false;
+            gamePanel.collisionChecker.checkTile(this);
+
+            // IF COLLISION IS FALSE, PLAYER CAN MOVE
+            if (collisionOn == false) {
+                
+                switch (direction) {
+                case "up":
+                    y -= speed;
+                    break;
+                case "down":
+                    y += speed;
+                    break;
+                case "left":
+                    x -= speed;
+                    break;
+                case "right":
+                    x += speed;
+                    break;
+                }
+            }
+
+            
             
             spriteCounter++;
             if (spriteCounter > 10) { // player image changes every 10 frames
