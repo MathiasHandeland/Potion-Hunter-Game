@@ -16,6 +16,7 @@ public class Player extends Entity {
     GameController controller;
 
     public Player(GamePanel gamePanel, GameController controller) {
+        super(gamePanel);
         this.gamePanel = gamePanel;
         this.controller = controller;
 
@@ -28,6 +29,8 @@ public class Player extends Entity {
 
         setDefaultValues();
         getPlayerImage();
+
+        loadCharacterImage();
     }
 
     public void setDefaultValues() {
@@ -72,6 +75,7 @@ public class Player extends Entity {
                 direction = "right";
             }
 
+            // TODO Check for collision with game walls
             stopPlayerFromMovingOutsideScreen();
 
             // CHECK TILE COLLISION
@@ -96,9 +100,7 @@ public class Player extends Entity {
                     break;
                 }
             }
-
-            
-            
+  
             spriteCounter++;
             if (spriteCounter > 10) { // player image changes every 10 frames
                 if (spriteNum == 1) {
@@ -108,33 +110,46 @@ public class Player extends Entity {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
-            }
-        }
-        
+            }            
+        }        
     }
 
     private void stopPlayerFromMovingOutsideScreen() {
 
-        // check if the player is moving outside the screen on the left side
+        // stop player from moving outside the screen
         if (x < 0) {
             x = 0;
         }
-        // check if the player is moving outside the screen on the right side
-        if (x > gamePanel.maxScreenCol * gamePanel.tileSize - 48) {
-            x = gamePanel.maxScreenCol * gamePanel.tileSize - 48;
+        if (x > gamePanel.getWidth() - gamePanel.tileSize) {
+            x = gamePanel.getWidth() - gamePanel.tileSize;
         }
-        // check if the player is moving outside the screen on the top side
         if (y < 0) {
             y = 0;
         }
-        // check if the player is moving outside the screen on the bottom side
-        if (y > gamePanel.maxScreenRow * gamePanel.tileSize - 48) {
-            y = gamePanel.maxScreenRow * gamePanel.tileSize - 48;
+        if (y > gamePanel.getHeight() - gamePanel.tileSize) {
+            y = gamePanel.getHeight() - gamePanel.tileSize;
+        }
+    }
+
+    public void loadCharacterImage() {
+
+        try {
+
+            character = ImageIO.read(getClass().getResource("/player2/character.png"));
+
+            
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public void draw(Graphics2D g2) {
+
+        // draw the character
+        g2.drawImage(character, 440, 194, gamePanel.tileSize, gamePanel.tileSize, null);
+
         
+        // draw the wizard
         BufferedImage image = null; // this is the image that will be drawn, it is null by default
 
         switch (direction) {

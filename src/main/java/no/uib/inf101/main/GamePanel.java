@@ -1,5 +1,6 @@
 package no.uib.inf101.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -46,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        // The Game Loop, delta game loop
+        // Delta game loop
         double drawInterval = 1000000000/FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -68,8 +69,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
-
-        // stop player from moving in the wall of the maze
         
     }
 

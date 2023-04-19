@@ -3,6 +3,8 @@ package no.uib.inf101.entity;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import no.uib.inf101.main.GamePanel;
+
 public class Entity {
     
     public int x, y;
@@ -16,4 +18,16 @@ public class Entity {
 
     public Rectangle solidArea;
     public boolean collisionOn = false;
+
+    // lagt inn
+   public BufferedImage character;
+
+
+
+    GamePanel gamePanel;
+
+    public Entity(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+    }
+   
 }
