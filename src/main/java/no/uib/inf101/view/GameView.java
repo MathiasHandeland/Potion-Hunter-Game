@@ -18,7 +18,7 @@ public class GameView extends JPanel {
 
     public GameView(Wizard wizard, Potion potion, int score) {
         this.wizard = wizard;
-        this.tileManager = new TileManager();
+        this.tileManager = new TileManager(); // The tile manager is used to draw the background
         this.potion = potion;
         this.score = score;
 
@@ -29,7 +29,7 @@ public class GameView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // Draw the background with tiles
+        // Draw the background with tiles by repeating the tile image for the entire window
         tileManager.drawTiles(g, getWidth(), getHeight());
 
         // Draw the current sprite of the wizard
@@ -41,8 +41,7 @@ public class GameView extends JPanel {
         }
 
         // Draw the score at the top-left corner with a aesthetic visual representation
-        drawScore((Graphics2D) g);
-        
+        drawScore((Graphics2D) g); 
     }
 
     public void updateView(int newScore) {
@@ -56,26 +55,20 @@ public class GameView extends JPanel {
         repaint(); // Repaint the screen with the new potion
     }
 
-    // Draw an aesthetic score counter with gradient and shadow
     private void drawScore(Graphics2D g2d) {
         // Enable anti-aliasing for smooth text
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         // Font settings
         Font scoreFont = new Font("Verdana", Font.BOLD, 30); 
         g2d.setFont(scoreFont);
-
         // Score text to display
         String scoreText = "Potions: " + score;
-
         // Gradient color for the text (light-to-dark)
         GradientPaint gradient = new GradientPaint(0, 0, Color.MAGENTA, 100, 0, Color.CYAN, true);
         g2d.setPaint(gradient);
-
         // Shadow effect - Draw slightly offset black shadow
         g2d.setColor(Color.BLACK);
         g2d.drawString(scoreText, 12, 42);  // Shadow offset by (2, 2)
-
         // Draw the actual score text with gradient on top of the shadow
         g2d.setPaint(gradient);
         g2d.drawString(scoreText, 10, 40);  // Main score text

@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * A class for managing the tile image used for the background.
+ * The tile image is repeated to fill the entire background.
+ * The tile image is loaded from the resources folder.
+ */
 public class TileManager {
     private BufferedImage tileImage;
 

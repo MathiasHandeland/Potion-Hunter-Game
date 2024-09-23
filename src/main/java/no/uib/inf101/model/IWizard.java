@@ -25,6 +25,9 @@ public interface IWizard {
     /**
      * Gets the current sprite image of the wizard.
      * Used for drawing the wizard on the screen.
+     * The sprite image depends on the direction the wizard is moving.
+     * This method is used in the GameView class to draw the wizard.
+     * It is called every time the screen is repainted.
      *
      * @return the current sprite image of the wizard.
      */
@@ -32,8 +35,16 @@ public interface IWizard {
 
     /**
      * Gets the solid area of the wizard used for collision detection.
+     * The solid area is a rectangle representing the position and size 
+     * of the wizard on the game board.
      *
      * @return the solid area of the wizard.
      */
     Rectangle getSolidArea();
+
+    /*
+     * Loads the sprites for the wizard character.
+     * The sprites are loaded from the resources folder.
+     */
+    void loadSprites();
 }

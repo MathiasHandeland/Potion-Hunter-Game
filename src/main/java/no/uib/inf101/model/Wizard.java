@@ -15,11 +15,11 @@ public class Wizard implements IWizard {
     private String direction = "down"; // Default direction
     private BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     private BufferedImage currentSprite;
-    private int spriteCounter = 0;
-    private int spriteNum = 1;
-    private Rectangle solidArea;
+    private int spriteCounter = 0; // The sprite counter is used to change sprite every 10 frames, initially set to 0 so that the sprite is changed immediately
+    private int spriteNum = 1; // The sprite number is used to alternate between two sprites for each direction to create an animation effect
+    private Rectangle solidArea; // Represents the position and size of the wizard on the game board
 
-    private final int boardWidth, boardHeight; // Size of the game board
+    private final int boardWidth, boardHeight; // Size of the game board, should be the same as the size of the game window and not change during the game
 
     public Wizard(int startX, int startY, int boardWidth, int boardHeight) {
         this.x = startX; 
@@ -32,7 +32,36 @@ public class Wizard implements IWizard {
         currentSprite = down1; // Default sprite
     }
 
-    private void loadSprites() {
+    @Override
+    public BufferedImage getCurrentSprite() {
+        return currentSprite;
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public Rectangle getSolidArea() {
+        return solidArea;
+    }
+
+    /*
+     * Gets the bounds of the wizard used for collision detection.
+     * Returns a rectangle representing the current position and size of the wizard on the game board.       
+     */
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, solidArea.width, solidArea.height);
+    }
+    
+    @Override
+    public void loadSprites() {
         
         try {
             up1 = ImageIO.read(getClass().getResource("/player/wizard_up_1.png"));
@@ -48,6 +77,13 @@ public class Wizard implements IWizard {
         }  
     }  
 
+    /*
+     * Updates the position of the wizard based on the keys pressed.
+     * The wizard can move up, down, left, and right.
+     * The wizard moves at a constant speed.
+     * The wizard cannot move outside the game board.
+     * The wizard has an animation effect when moving.
+     */
     public void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
         if (upPressed || downPressed || leftPressed || rightPressed) {
             if (upPressed) {
@@ -67,7 +103,7 @@ public class Wizard implements IWizard {
             stopFromMovingOutside();
 
             // Update sprite animation
-            spriteCounter++;
+            spriteCounter++; 
             if (spriteCounter > 10) { // Change sprite every 10 frames
                 spriteNum = (spriteNum == 1) ? 2 : 1;
                 spriteCounter = 0;
@@ -97,35 +133,4 @@ public class Wizard implements IWizard {
         if (y < 0) y = 0;
         if (y > boardHeight - solidArea.height) y = boardHeight - solidArea.height;
     }
-
-    // Getters
-    @Override
-    public BufferedImage getCurrentSprite() {
-        return currentSprite;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public Rectangle getSolidArea() {
-        return solidArea;
-    }
-
-    /*
-     * Get the bounds of the wizard used for collision detection.
-     * Returns a rectangle representing their position and size on the game board.        
-     */
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, solidArea.width, solidArea.height);
-    }
-    
 }
-

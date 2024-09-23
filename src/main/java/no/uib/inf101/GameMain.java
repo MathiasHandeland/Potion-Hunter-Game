@@ -6,8 +6,6 @@ import no.uib.inf101.view.GameView;
 import no.uib.inf101.controller.GameController;
 import no.uib.inf101.model.Potion;
 import no.uib.inf101.model.Wizard;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**

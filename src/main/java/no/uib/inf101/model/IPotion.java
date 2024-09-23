@@ -33,6 +33,9 @@ public interface IPotion {
     
     /**
      * Removes the potion from the game board.
+     * It removes the potion by setting the x and y coordinates to -1.
+     * This will make the potion disappear from the game board because 
+     * the game board will not draw objects with negative coordinates.
      */
     void remove();
 }
