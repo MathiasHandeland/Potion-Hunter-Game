@@ -52,6 +52,10 @@ public class Wizard implements IWizard {
         return solidArea;
     }
 
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     /*
      * Gets the bounds of the wizard used for collision detection.
      * Returns a rectangle representing the current position and size of the wizard on the game board.       

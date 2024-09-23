@@ -3,6 +3,7 @@ package no.uib.inf101.view;
 import java.awt.*;
 import javax.swing.*;
 
+import no.uib.inf101.model.Enemy;
 import no.uib.inf101.model.Potion;
 import no.uib.inf101.model.Wizard;
 
@@ -14,15 +15,28 @@ public class GameView extends JPanel {
     private final Wizard wizard;
     private final TileManager tileManager; 
     private Potion potion;
+    private Enemy enemy; // The enemy NPC
     private int score; // To display the score of the player
+    private final int boardWidth;
+    private final int boardHeight;
 
-    public GameView(Wizard wizard, Potion potion, int score) {
+    private int wizardLives; // Add wizard lives variable
+    private Image heartImage; // Image for lives
+
+    public GameView(Wizard wizard, Potion potion, Enemy enemy, int score, int wizardLives, int boardWidth, int boardHeight) {
         this.wizard = wizard;
         this.tileManager = new TileManager(); // The tile manager is used to draw the background
         this.potion = potion;
-        this.score = score;
+        this.enemy = enemy;
+        this.score = score; 
+        this.boardWidth = boardWidth;
+        this.boardHeight = boardHeight;
+        this.wizardLives = wizardLives; // Initialize wizard lives
 
-        this.setPreferredSize(new Dimension(800, 600)); // Fix med å hente fra        
+        // Load the heart image to represent the lives
+        this.heartImage = new ImageIcon(getClass().getResource("/heart/heart.png")).getImage();
+
+        this.setPreferredSize(new Dimension(boardWidth, boardHeight));      
     }
 
     @Override
@@ -40,19 +54,46 @@ public class GameView extends JPanel {
             g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
         }
 
+        // Draw the NPC if it exists
+        if (enemy != null) {
+            g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
+        }
+
         // Draw the score at the top-left corner with a aesthetic visual representation
         drawScore((Graphics2D) g); 
+
+        // Draw the lives at the top-right corner
+        drawLives((Graphics2D) g);
     }
 
-    public void updateView(int newScore) {
+    public void updateView(int newScore, int newLives) {
         this.score = newScore; // Update the score
+        this.wizardLives = newLives; // Update the lives
         repaint();
+    }
+
+    // Draw lives using heart images or icons
+    private void drawLives(Graphics2D g2d) {
+        int heartSize = 30; // Size of the heart icon
+        int spacing = 10;   // Spacing between heart icons
+        int xPosition = getWidth() - (wizardLives * (heartSize + spacing)) - 20; // Start drawing hearts on the top-right corner
+        int yPosition = 20; // Y position of the hearts
+
+        for (int i = 0; i < wizardLives; i++) {
+            g2d.drawImage(heartImage, xPosition + i * (heartSize + spacing), yPosition, heartSize, heartSize, null);
+        }
     }
 
     // Method to update the potion's position
     public void updatePotion(Potion newPotion) {
         this.potion = newPotion; // Update the potion
         repaint(); // Repaint the screen with the new potion
+    }
+
+    // Method to update the NPC
+    public void updateNPC(Enemy enemy) {
+        this.enemy = enemy; // Update the NPC
+        repaint(); // Repaint the screen with the new NPC
     }
 
     private void drawScore(Graphics2D g2d) {
