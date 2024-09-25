@@ -2,13 +2,9 @@ package no.uib.inf101.controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import no.uib.inf101.model.GameModel;
+import no.uib.inf101.model.GameState;
 
-/**
- * Controller class for the game. Handles input from the user and updates the
- * game state accordingly.
- */
 public class GameController extends KeyAdapter {
     private final GameModel gameModel;
 
@@ -25,8 +21,16 @@ public class GameController extends KeyAdapter {
             case KeyEvent.VK_DOWN -> downPressed = true;
             case KeyEvent.VK_LEFT -> leftPressed = true;
             case KeyEvent.VK_RIGHT -> rightPressed = true;
+
+            case KeyEvent.VK_SPACE -> handleSpacePress();
+            case KeyEvent.VK_P -> handlePausePress();
+            case KeyEvent.VK_R -> handleRestartPress();
         }
-        gameModel.getWizard().update(upPressed, downPressed, leftPressed, rightPressed);
+
+        // If the game is active, update the wizard's position
+        if (gameModel.getGameState() == GameState.ACTIVE_GAME) {
+            gameModel.getWizard().update(upPressed, downPressed, leftPressed, rightPressed);
+        }
     }
 
     @Override
@@ -37,10 +41,34 @@ public class GameController extends KeyAdapter {
             case KeyEvent.VK_LEFT -> leftPressed = false;
             case KeyEvent.VK_RIGHT -> rightPressed = false;
         }
-        gameModel.getWizard().update(upPressed, downPressed, leftPressed, rightPressed);
+        if (gameModel.getGameState() == GameState.ACTIVE_GAME) {
+            gameModel.getWizard().update(upPressed, downPressed, leftPressed, rightPressed);
+        }
     }
 
-    public void updateGame() {
-        gameModel.update(downPressed, downPressed, downPressed, downPressed); // Use the GameModel's update logic to advance the game state
+    private void handleSpacePress() {
+        GameState currentState = gameModel.getGameState();
+        if (currentState == GameState.START_SCREEN || currentState == GameState.PAUSED_GAME) {
+            // Start the game or unpause it
+            gameModel.setGameState(GameState.ACTIVE_GAME);
+        }
     }
+
+    private void handlePausePress() {
+        GameState currentState = gameModel.getGameState();
+        if (currentState == GameState.ACTIVE_GAME) {
+            // Pause the game
+            gameModel.setGameState(GameState.PAUSED_GAME);
+        }
+    }
+
+    private void handleRestartPress() {
+        if (gameModel.getGameState() == GameState.GAME_OVER) {
+            // Reset the game state and game logic
+            gameModel.resetGame();  // This method will reset all game elements
+            gameModel.setGameState(GameState.ACTIVE_GAME); // Set the game state to active
+        }
+    }
+    
+    
 }

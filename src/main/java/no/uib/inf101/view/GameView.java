@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import no.uib.inf101.model.GameModel;
+import no.uib.inf101.model.GameState;
 import no.uib.inf101.model.Wizard;
 import no.uib.inf101.model.Enemy;
 import no.uib.inf101.model.Potion;
@@ -28,34 +29,41 @@ public class GameView extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        // Draw the background with tiles
-        tileManager.drawTiles(g, getWidth(), getHeight());
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        // Draw the wizard
-        Wizard wizard = gameModel.getWizard();
-        g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
+    GameState gameState = gameModel.getGameState();
 
-        // Draw the potion if it's visible (not removed)
-        Potion potion = gameModel.getPotion();
-        if (potion.getX() != -1 && potion.getY() != -1) {
-            g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
+    switch (gameState) {
+        case START_SCREEN -> paintStartScreen(g);
+        case ACTIVE_GAME -> {
+            // Draw the active game screen
+            tileManager.drawTiles(g, getWidth(), getHeight());
+
+            // Draw the wizard
+            Wizard wizard = gameModel.getWizard();
+            g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
+
+            // Draw the potion if it's visible
+            Potion potion = gameModel.getPotion();
+            if (potion.getX() != -1 && potion.getY() != -1) {
+                g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
+            }
+
+            // Draw the enemy if it exists
+            Enemy enemy = gameModel.getEnemy();
+            if (enemy != null) {
+                g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
+            }
+
+            // Draw score and lives
+            drawScore((Graphics2D) g, gameModel.getScore());
+            drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
         }
-
-        // Draw the NPC (enemy)
-        Enemy enemy = gameModel.getEnemy();
-        if (enemy != null) {
-            g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
-        }
-
-        // Draw the score
-        drawScore((Graphics2D) g, gameModel.getScore()); 
-
-        // Draw the lives
-        drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
+        case PAUSED_GAME -> paintPauseScreen(g);
+        case GAME_OVER -> paintGameOverScreen(g);
     }
+}
 
     public void updateView() {
         repaint();
@@ -91,4 +99,35 @@ public class GameView extends JPanel {
         g2d.setPaint(gradient);
         g2d.drawString(scoreText, 10, 40);  // Main score text
     }
+
+    // paint start screen
+    public void paintStartScreen(Graphics g) {
+        // Draw the start screen
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Verdana", Font.BOLD, 30));
+        g.drawString("Press SPACE to start the game", 100, 100);
+    }
+
+    // paint game over screen
+    public void paintGameOverScreen(Graphics g) {
+        // Draw the game over screen
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Verdana", Font.BOLD, 30));
+        g.drawString("Game Over! Press R to restart", 100, 100);
+    }
+
+    // paint pause screen
+    public void paintPauseScreen(Graphics g) {
+        // Draw the pause screen
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Verdana", Font.BOLD, 30));
+        g.drawString("Game Paused! Press SPACE to resume", 100, 100);
+    }
+
 }

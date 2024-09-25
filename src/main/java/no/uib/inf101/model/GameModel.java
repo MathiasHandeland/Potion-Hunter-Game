@@ -12,11 +12,16 @@ public class GameModel {
     private Potion potion;
     private Enemy enemy;
     private int score;       // Player's score
+    private GameState gameState;
 
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 600;
 
     public GameModel() {
+        
+        // Initialize the game state
+        gameState = GameState.START_SCREEN; // Set the initial game state to the start screen
+
         // Initialize the wizard at a specific location
         this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
 
@@ -30,22 +35,63 @@ public class GameModel {
         this.score = 0;
     }
 
-    // Updates the game state (wizard, enemy, potion, and score)
+    public void resetGame() {
+        // Reset wizard's position and lives
+        this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
+        this.wizard.resetWizardLives(); // Reset lives
+    
+        // Reset the potion
+        spawnNewPotion();
+    
+        // Reset the enemy to null (not present at the start)
+        this.enemy = null;
+    
+        // Reset the score
+        this.score = 0;
+    
+        // Set the game state back to START_SCREEN
+        setGameState(GameState.START_SCREEN); // Initially set to START_SCREEN; it will change to ACTIVE_GAME on restart
+    }
+    
+    
+    
+
+    // get the current game state
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    // set the game state
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+            //ikke bruk for tror eg
+    // reset the game state to the start screen
+    public void resetGameState() {
+        this.gameState = GameState.START_SCREEN;
+    }
+
+    // method to get the board width
+    public int getBoardWidth() {
+        return BOARD_WIDTH;
+    }
+
+    // method to get the board height
+    public int getBoardHeight() {
+        return BOARD_HEIGHT;
+    }
+
+    // Updates the game state based on current input
     public void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
-        // Update wizard's movement based on input
-        wizard.update(upPressed, downPressed, leftPressed, rightPressed);
-
-        // Check for collision between wizard and potion
-        checkPotionCollision();
-
-        // Update enemy movement if it exists
-        if (enemy != null) {
-            enemy.update(wizard.getX(), wizard.getY());
-            checkEnemyCollision();  // Check collision between wizard and enemy
+        if (gameState == GameState.ACTIVE_GAME) {
+            wizard.update(upPressed, downPressed, leftPressed, rightPressed);
+            checkPotionCollision();
+            if (enemy != null) {
+                enemy.update(wizard.getX(), wizard.getY());
+                checkEnemyCollision();
+            }
+            updateSpeeds();
         }
-
-        // Update enemy and wizard speed based on score
-        updateSpeeds();
     }
 
     // Method to check collision with the potion and update the score
@@ -69,6 +115,12 @@ public class GameModel {
         if (wizard.getBounds().intersects(enemy.getBounds())) {
             // Decrease wizard's lives
             wizard.decreaseWizardLives();
+            
+            // Check if the wizard has no lives left
+            if (wizard.getWizardLives() <= 0) {
+                setGameState(GameState.GAME_OVER);
+            }
+            
             enemy.reverseDirection();   // Make the enemy reverse direction
             enemy.setPaused(true);  // Pause the enemy briefly
         }

@@ -4,11 +4,8 @@ import javax.swing.*;
 
 import no.uib.inf101.view.GameView;
 import no.uib.inf101.controller.GameController;
-import no.uib.inf101.model.Enemy;
 import no.uib.inf101.model.GameModel;
-import no.uib.inf101.model.Potion;
-import no.uib.inf101.model.Wizard;
-import java.util.Random;
+import no.uib.inf101.model.GameState;
 
 /**
  * Main class for the game. Sets up the game window and starts the game loop.
@@ -17,35 +14,29 @@ import java.util.Random;
  * The game loop runs in a separate thread to keep the game responsive.
  */
 public class GameMain {
-    private JFrame window;
-    private GameView gameView;
-    private GameController controller;
+    
+    public static final String GAME_TITLE = "THE POTION HUNTER";
+
     private GameModel gameModel;
-
-    private static final int BOARD_WIDTH = 800;
-    private static final int BOARD_HEIGHT = 600;
-
+    private GameView gameView;
+    private GameController gameController;
+    private JFrame window;
+    
     public static void main(String[] args) {
         GameMain game = new GameMain();
         game.setupGame();
     }
 
     private void setupGame() {
-        // Initialize game model
+        // Initialize the game model, view, and controller
         gameModel = new GameModel();
-
+        gameView = new GameView(gameModel, gameModel.getBoardWidth(), gameModel.getBoardHeight());
+        gameController = new GameController(gameModel);
+        
         // Create the main game window
-        window = new JFrame("Wizard Game");
+        window = new JFrame(GAME_TITLE);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-
-        // Create the game panel and controller
-        gameView = new GameView(gameModel, BOARD_WIDTH, BOARD_HEIGHT);
-        controller = new GameController(gameModel);
-
-        // Add the controller to the panel
-        gameView.addKeyListener(controller);
-        gameView.setFocusable(true);
 
         // Set up the window
         window.add(gameView);
@@ -53,46 +44,51 @@ public class GameMain {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        // Start the game loop
+        // Add the controller to the panel so it can listen for key events from the user
+        gameView.addKeyListener(gameController);
+        gameView.setFocusable(true);
+
+        // Start the game loop in a new thread
         gameLoop();
     }
 
+    // kommenter hele denne metoden
     private void gameLoop() {
         long lastTime = System.nanoTime();
         double nsPerTick = 1000000000.0 / 60.0;  // 60 ticks per second
         double delta = 0;
-
-        // Continue the game only while the wizard has lives left
-        while (gameModel.getWizard().getWizardLives() > 0) {
+    
+        while (true) {
             long now = System.nanoTime();
             delta += (now - lastTime) / nsPerTick;
             lastTime = now;
-
+    
             if (delta >= 1) {
-                gameModel.update(controller.upPressed, controller.downPressed, controller.leftPressed, controller.rightPressed);
-
-                // Update the game view with the latest state
-                gameView.updateView();
-
-                // Repaint the screen
-                gameView.repaint();
+                // Handle different game states
+                GameState currentState = gameModel.getGameState();
+                
+                switch (currentState) {
+                    case START_SCREEN -> gameView.paintStartScreen(window.getGraphics());
+                    case ACTIVE_GAME -> {
+                        gameModel.update(gameController.upPressed, gameController.downPressed, 
+                                         gameController.leftPressed, gameController.rightPressed);
+                        gameView.updateView();  // Update and repaint the game view
+                    }
+                    case PAUSED_GAME -> gameView.paintPauseScreen(window.getGraphics());
+                    case GAME_OVER -> {
+                        gameView.paintGameOverScreen(window.getGraphics());
+                        // Keep the loop running to listen for restart input
+                    }
+                }
                 delta--;
             }
-
-            // Optionally add a delay for frame rate control
+    
+            // 
             try {
                 Thread.sleep(1); // Sleep for a short duration
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
-        // End the game when the loop stops
-        endGame();
     }
-
-    private void endGame() {
-        JOptionPane.showMessageDialog(window, "Game Over! You have lost all lives.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-        System.exit(0);  // Exit the game
-    }
-}
+}    

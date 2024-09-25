@@ -44,6 +44,11 @@ public class Wizard implements IWizard {
         currentSprite = down1; // Default sprite
     }
 
+    // reset wizard lives
+    public void resetWizardLives() {
+        wizardLives = 3;
+    }
+
     // legg inn i IWizard
     public int getWizardLives() {
         return wizardLives;
