@@ -5,11 +5,20 @@ import java.awt.event.KeyEvent;
 import no.uib.inf101.model.GameModel;
 import no.uib.inf101.model.GameState;
 
+/**
+ * This class is responsible for handling user input and updating the game state
+ * accordingly. It listens for key presses and releases, and updates the wizard's
+ * position based on the user's input.
+ */
 public class GameController extends KeyAdapter {
-    private final GameModel gameModel;
+    
+    private final GameModel gameModel;  // bytte til ControlableGameModel
+    public boolean upPressed, downPressed, leftPressed, rightPressed; 
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
-
+    /**
+     * Constructor for the GameController class.
+     * @param gameModel The game model that the controller will interact with.
+     */
     public GameController(GameModel gameModel) {
         this.gameModel = gameModel;
     }
@@ -69,6 +78,4 @@ public class GameController extends KeyAdapter {
             gameModel.setGameState(GameState.ACTIVE_GAME); // Set the game state to active
         }
     }
-    
-    
 }

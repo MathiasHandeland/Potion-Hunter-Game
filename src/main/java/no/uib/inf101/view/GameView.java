@@ -17,10 +17,12 @@ public class GameView extends JPanel {
     private final GameModel gameModel;
     private final TileManager tileManager; 
     private Image heartImage; // Image for lives
+    private ColorTheme colortheme; 
 
     public GameView(GameModel gameModel, int boardWidth, int boardHeight) {
         this.gameModel = gameModel;
         this.tileManager = new TileManager(); // The tile manager is used to draw the background
+        this.colortheme = new DefaultColorTheme();
 
         // Load the heart image to represent the lives
         this.heartImage = new ImageIcon(getClass().getResource("/heart/heart.png")).getImage();
@@ -101,47 +103,44 @@ public class GameView extends JPanel {
     }
 
     public void paintStartScreen(Graphics g) {
-        // Clear the screen
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
-    
-        // Draw the start screen text
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 50));
-        g.drawString("POTION HUNTER", getWidth() / 2 - 210, getHeight() / 2 - 50);
-    
-        g.setFont(new Font("Arial", Font.PLAIN, 20));
-        g.drawString("Press space bar to start", getWidth() / 2 - 100, getHeight() / 2 + 10);
+        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
+
+        g.setColor(colortheme.getGamestateTxtColor());
+        g.setFont(new Font("Monospaced", Font.BOLD, 80));
+        Inf101Graphics.drawCenteredString(g, "POTION HUNTER", gameModel.getBoardWidth() / 2,
+        gameModel.getBoardHeight() / 2);
+
+        g.setFont(new Font("Monospaced", Font.BOLD, 24));
+        Inf101Graphics.drawCenteredString(g, "Press space to start", 
+        gameModel.getBoardWidth() / 2, gameModel.getBoardHeight() / 2 + 100);     
     }
 
     public void paintGameOverScreen(Graphics g) {
-        // Set transparency
-        g.setColor(new Color(0, 0, 0, 150)); // Black with 150 alpha
-        g.fillRect(0, 0, getWidth(), getHeight());
-    
-        // Draw "Game Over" message
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 50));
-        g.drawString("Game Over", getWidth() / 2 - 150, getHeight() / 2 - 50);
-    
-        // Draw "Press space bar to restart" message
-        g.setFont(new Font("Arial", Font.PLAIN, 20));
-        g.drawString("Press R button to restart", getWidth() / 2 - 100, getHeight() / 2 + 10);
+        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
+
+        g.setColor(colortheme.getGamestateTxtColor());
+        g.setFont(new Font("Monospaced", Font.BOLD, 120));
+        Inf101Graphics.drawCenteredString(g, "GAME OVER", gameModel.getBoardWidth() / 2,
+        gameModel.getBoardHeight() / 2);
+
+        g.setFont(new Font("Monospaced", Font.BOLD, 24));
+        Inf101Graphics.drawCenteredString(g, "Press R to restart", 
+        gameModel.getBoardWidth() / 2, gameModel.getBoardHeight() / 2 + 100);
     }
 
-    // paint pause screen
     public void paintPauseScreen(Graphics g) {
-        // Set transparency
-        g.setColor(new Color(0, 0, 0, 150)); // Black with 150 alpha
-        g.fillRect(0, 0, getWidth(), getHeight());
-    
-        // Draw "Game Paused" message
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 50));
-        g.drawString("Game Paused", getWidth() / 2 - 150, getHeight() / 2 - 50);
-    
-        // Draw "Press space bar to resume" message
-        g.setFont(new Font("Arial", Font.PLAIN, 20));
-        g.drawString("Press space to resume", getWidth() / 2 - 100, getHeight() / 2 + 10);
+        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
+
+        g.setColor(colortheme.getGamestateTxtColor());
+        g.setFont(new Font("Monospaced", Font.BOLD, 150));
+        Inf101Graphics.drawCenteredString(g, "PAUSED", gameModel.getBoardWidth() / 2,
+        gameModel.getBoardHeight() / 2);
+
+        g.setFont(new Font("Monospaced", Font.BOLD, 24));
+        Inf101Graphics.drawCenteredString(g, "Press space to resume", 
+        gameModel.getBoardWidth() / 2, gameModel.getBoardHeight() / 2 + 100);
     }
 }
