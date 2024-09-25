@@ -47,4 +47,40 @@ public interface IWizard {
      * The sprites are loaded from the resources folder.
      */
     void loadSprites();
+
+    /**
+     * Sets the speed of the wizard.
+     * The speed determines how fast the wizard moves on the game board.
+     *
+     * @param speed the speed of the wizard.
+     */
+    void setSpeed(int speed);
+
+    /**
+     * Gets the speed of the wizard.
+     * The speed determines how fast the wizard moves on the game board.
+     *
+     * @return the speed of the wizard.
+     */
+    int getSpeed();
+
+    /**
+     * Gets the bounding box of the wizard.
+     * The bounding box is used for collision detection with other objects.
+     *
+     * @return the bounding box of the wizard.
+     */
+    Rectangle getBounds();
+
+    /**
+     * Updates the position of the wizard based on the user input.
+     * The wizard can move up, down, left, or right on the game board.
+     * The wizard should not be able to move outside the game board.
+     *
+     * @param upPressed    true if the up key is pressed, false otherwise.
+     * @param downPressed  true if the down key is pressed, false otherwise.
+     * @param leftPressed  true if the left key is pressed, false otherwise.
+     * @param rightPressed true if the right key is pressed, false otherwise.
+     */
+    void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed);
 }

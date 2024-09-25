@@ -21,6 +21,14 @@ public class Wizard implements IWizard {
 
     private final int boardWidth, boardHeight; // Size of the game board, should be the same as the size of the game window and not change during the game
 
+    /**
+     * Constructor for the wizard.
+     * The wizard is placed on the game board at the given x and y coordinates.
+     * @param startX x-coordinate of the wizard
+     * @param startY y-coordinate of the wizard
+     * @param boardWidth width of the game board
+     * @param boardHeight height of the game board
+     */
     public Wizard(int startX, int startY, int boardWidth, int boardHeight) {
         this.x = startX; 
         this.y = startY;
@@ -52,14 +60,17 @@ public class Wizard implements IWizard {
         return solidArea;
     }
 
+    @Override
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    /*
-     * Gets the bounds of the wizard used for collision detection.
-     * Returns a rectangle representing the current position and size of the wizard on the game board.       
-     */
+    @Override
+    public int getSpeed() {
+        return speed;
+    }
+
+    @Override
     public Rectangle getBounds() {
         return new Rectangle(x, y, solidArea.width, solidArea.height);
     }
@@ -81,18 +92,13 @@ public class Wizard implements IWizard {
         }  
     }  
 
-    /*
-     * Updates the position of the wizard based on the keys pressed.
-     * The wizard can move up, down, left, and right.
-     * The wizard moves at a constant speed.
-     * The wizard cannot move outside the game board.
-     * The wizard has an animation effect when moving.
-     */
+    @Override
     public void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
+        
         if (upPressed || downPressed || leftPressed || rightPressed) {
             if (upPressed) {
                 direction = "up";
-                y -= speed;
+                y -= speed; 
             } else if (downPressed) {
                 direction = "down";
                 y += speed;
@@ -106,9 +112,9 @@ public class Wizard implements IWizard {
 
             stopFromMovingOutside();
 
-            // Update sprite animation
+            // Update sprite animation, by changing sprite every 10 frames
             spriteCounter++; 
-            if (spriteCounter > 10) { // Change sprite every 10 frames
+            if (spriteCounter > 10) { 
                 spriteNum = (spriteNum == 1) ? 2 : 1;
                 spriteCounter = 0;
             }
@@ -131,6 +137,7 @@ public class Wizard implements IWizard {
         }
     }
 
+    // Helper method to stop the wizard from moving outside the game board
     private void stopFromMovingOutside() {
         if (x < 0) x = 0;
         if (x > boardWidth - solidArea.width) x = boardWidth - solidArea.width;

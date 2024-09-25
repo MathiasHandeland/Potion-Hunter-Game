@@ -52,7 +52,7 @@ public class GameMain {
 
         // Create the game panel and controller
         gameView = new GameView(wizard, potion, enemy, score, wizardLives, BOARD_WIDTH, BOARD_HEIGHT);
-        controller = new GameController(wizard);
+        controller = new GameController(wizard); // skal også ta in view
 
         // Add the controller to the panel
         gameView.addKeyListener(controller);
