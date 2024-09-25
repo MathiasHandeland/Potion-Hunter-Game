@@ -17,8 +17,6 @@ public class GameView extends JPanel {
     private Potion potion;
     private Enemy enemy; // The enemy NPC
     private int score; // To display the score of the player
-    private final int boardWidth;
-    private final int boardHeight;
 
     private int wizardLives; // Add wizard lives variable
     private Image heartImage; // Image for lives
@@ -29,8 +27,6 @@ public class GameView extends JPanel {
         this.potion = potion;
         this.enemy = enemy;
         this.score = score; 
-        this.boardWidth = boardWidth;
-        this.boardHeight = boardHeight;
         this.wizardLives = wizardLives; // Initialize wizard lives
 
         // Load the heart image to represent the lives

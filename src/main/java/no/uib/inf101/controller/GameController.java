@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import no.uib.inf101.model.Wizard;
+import no.uib.inf101.model.GameState;
 
 /**
  * Controller class for the game. Handles input from the user and updates the

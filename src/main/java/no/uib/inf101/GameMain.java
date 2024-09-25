@@ -23,9 +23,9 @@ public class GameMain {
     private Potion potion;
     private Enemy enemy;
     private int score; // Stores the score of the player, which is the amount of potions picked up
-
+    
     private int wizardLives = 3; // Number of lives the wizard has
-
+    
     // Constants for game screen dimensions.
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 600;
