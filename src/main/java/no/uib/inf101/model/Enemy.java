@@ -17,7 +17,7 @@ public class Enemy {
 
     private boolean isPaused = false; // Flag to indicate if the enemy is paused
     private long pauseStartTime; // Start time for pause
-    private final long PAUSE_DURATION = 200; // Duration to pause in milliseconds
+    private final long PAUSE_DURATION = 400; // Duration to pause in milliseconds
 
 
     // Add these fields for the game board dimensions

@@ -29,42 +29,42 @@ public class GameView extends JPanel {
     }
 
     @Override
-protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-    GameState gameState = gameModel.getGameState();
+        GameState gameState = gameModel.getGameState();
 
-    switch (gameState) {
-        case START_SCREEN -> paintStartScreen(g);
-        case ACTIVE_GAME -> {
-            // Draw the active game screen
-            tileManager.drawTiles(g, getWidth(), getHeight());
+        switch (gameState) {
+            case START_SCREEN -> paintStartScreen(g);
+            case ACTIVE_GAME -> {
+                // Draw the active game screen
+                tileManager.drawTiles(g, getWidth(), getHeight());
 
-            // Draw the wizard
-            Wizard wizard = gameModel.getWizard();
-            g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
+                // Draw the wizard
+                Wizard wizard = gameModel.getWizard();
+                g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
 
-            // Draw the potion if it's visible
-            Potion potion = gameModel.getPotion();
-            if (potion.getX() != -1 && potion.getY() != -1) {
-                g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
+                // Draw the potion if it's visible
+                Potion potion = gameModel.getPotion();
+                if (potion.getX() != -1 && potion.getY() != -1) {
+                    g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
+                }
+
+                // Draw the enemy if it exists
+                Enemy enemy = gameModel.getEnemy();
+                if (enemy != null) {
+                    g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
+                }
+
+                // Draw score and lives
+                drawScore((Graphics2D) g, gameModel.getScore());
+                drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
             }
-
-            // Draw the enemy if it exists
-            Enemy enemy = gameModel.getEnemy();
-            if (enemy != null) {
-                g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
-            }
-
-            // Draw score and lives
-            drawScore((Graphics2D) g, gameModel.getScore());
-            drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
+            case PAUSED_GAME -> paintPauseScreen(g);
+            case GAME_OVER -> paintGameOverScreen(g);
         }
-        case PAUSED_GAME -> paintPauseScreen(g);
-        case GAME_OVER -> paintGameOverScreen(g);
     }
-}
-
+    
     public void updateView() {
         repaint();
     }
@@ -85,7 +85,7 @@ protected void paintComponent(Graphics g) {
         // Enable anti-aliasing for smooth text
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Font settings
-        Font scoreFont = new Font("Verdana", Font.BOLD, 30); 
+        Font scoreFont = new Font("Verdana", Font.BOLD, 25); 
         g2d.setFont(scoreFont);
         // Score text to display
         String scoreText = "Potions: " + score;
@@ -100,34 +100,48 @@ protected void paintComponent(Graphics g) {
         g2d.drawString(scoreText, 10, 40);  // Main score text
     }
 
-    // paint start screen
     public void paintStartScreen(Graphics g) {
-        // Draw the start screen
+        // Clear the screen
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
+    
+        // Draw the start screen text
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Verdana", Font.BOLD, 30));
-        g.drawString("Press SPACE to start the game", 100, 100);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        g.drawString("POTION HUNTER", getWidth() / 2 - 210, getHeight() / 2 - 50);
+    
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("Press space bar to start", getWidth() / 2 - 100, getHeight() / 2 + 10);
     }
 
-    // paint game over screen
     public void paintGameOverScreen(Graphics g) {
-        // Draw the game over screen
-        g.setColor(Color.BLACK);
+        // Set transparency
+        g.setColor(new Color(0, 0, 0, 150)); // Black with 150 alpha
         g.fillRect(0, 0, getWidth(), getHeight());
+    
+        // Draw "Game Over" message
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Verdana", Font.BOLD, 30));
-        g.drawString("Game Over! Press R to restart", 100, 100);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        g.drawString("Game Over", getWidth() / 2 - 150, getHeight() / 2 - 50);
+    
+        // Draw "Press space bar to restart" message
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("Press R button to restart", getWidth() / 2 - 100, getHeight() / 2 + 10);
     }
 
     // paint pause screen
     public void paintPauseScreen(Graphics g) {
-        // Draw the pause screen
-        g.setColor(Color.BLACK);
+        // Set transparency
+        g.setColor(new Color(0, 0, 0, 150)); // Black with 150 alpha
         g.fillRect(0, 0, getWidth(), getHeight());
+    
+        // Draw "Game Paused" message
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Verdana", Font.BOLD, 30));
-        g.drawString("Game Paused! Press SPACE to resume", 100, 100);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        g.drawString("Game Paused", getWidth() / 2 - 150, getHeight() / 2 - 50);
+    
+        // Draw "Press space bar to resume" message
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("Press space to resume", getWidth() / 2 - 100, getHeight() / 2 + 10);
     }
-
 }

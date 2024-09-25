@@ -52,9 +52,6 @@ public class GameModel {
         // Set the game state back to START_SCREEN
         setGameState(GameState.START_SCREEN); // Initially set to START_SCREEN; it will change to ACTIVE_GAME on restart
     }
-    
-    
-    
 
     // get the current game state
     public GameState getGameState() {

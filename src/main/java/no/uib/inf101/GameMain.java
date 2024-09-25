@@ -83,7 +83,7 @@ public class GameMain {
                 delta--;
             }
     
-            // 
+            // forklar hva denne gjør:
             try {
                 Thread.sleep(1); // Sleep for a short duration
             } catch (InterruptedException e) {
