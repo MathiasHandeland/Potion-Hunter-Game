@@ -3,31 +3,23 @@ package no.uib.inf101.view;
 import java.awt.*;
 import javax.swing.*;
 
+import no.uib.inf101.model.GameModel;
+import no.uib.inf101.model.Wizard;
 import no.uib.inf101.model.Enemy;
 import no.uib.inf101.model.Potion;
-import no.uib.inf101.model.Wizard;
 
 /**
  * The view class for the game. Draws the game state on the screen.
  */
 public class GameView extends JPanel {
     
-    private final Wizard wizard;
+    private final GameModel gameModel;
     private final TileManager tileManager; 
-    private Potion potion;
-    private Enemy enemy; // The enemy NPC
-    private int score; // To display the score of the player
-
-    private int wizardLives; // Add wizard lives variable
     private Image heartImage; // Image for lives
 
-    public GameView(Wizard wizard, Potion potion, Enemy enemy, int score, int wizardLives, int boardWidth, int boardHeight) {
-        this.wizard = wizard;
+    public GameView(GameModel gameModel, int boardWidth, int boardHeight) {
+        this.gameModel = gameModel;
         this.tileManager = new TileManager(); // The tile manager is used to draw the background
-        this.potion = potion;
-        this.enemy = enemy;
-        this.score = score; 
-        this.wizardLives = wizardLives; // Initialize wizard lives
 
         // Load the heart image to represent the lives
         this.heartImage = new ImageIcon(getClass().getResource("/heart/heart.png")).getImage();
@@ -39,37 +31,38 @@ public class GameView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // Draw the background with tiles by repeating the tile image for the entire window
+        // Draw the background with tiles
         tileManager.drawTiles(g, getWidth(), getHeight());
 
-        // Draw the current sprite of the wizard
+        // Draw the wizard
+        Wizard wizard = gameModel.getWizard();
         g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
 
         // Draw the potion if it's visible (not removed)
+        Potion potion = gameModel.getPotion();
         if (potion.getX() != -1 && potion.getY() != -1) {
             g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
         }
 
-        // Draw the NPC if it exists
+        // Draw the NPC (enemy)
+        Enemy enemy = gameModel.getEnemy();
         if (enemy != null) {
             g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
         }
 
-        // Draw the score at the top-left corner with a aesthetic visual representation
-        drawScore((Graphics2D) g); 
+        // Draw the score
+        drawScore((Graphics2D) g, gameModel.getScore()); 
 
-        // Draw the lives at the top-right corner
-        drawLives((Graphics2D) g);
+        // Draw the lives
+        drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
     }
 
-    public void updateView(int newScore, int newLives) {
-        this.score = newScore; // Update the score
-        this.wizardLives = newLives; // Update the lives
+    public void updateView() {
         repaint();
     }
 
     // Draw lives using heart images or icons
-    private void drawLives(Graphics2D g2d) {
+    private void drawLives(Graphics2D g2d, int wizardLives) {
         int heartSize = 30; // Size of the heart icon
         int spacing = 10;   // Spacing between heart icons
         int xPosition = getWidth() - (wizardLives * (heartSize + spacing)) - 20; // Start drawing hearts on the top-right corner
@@ -80,19 +73,7 @@ public class GameView extends JPanel {
         }
     }
 
-    // Method to update the potion's position
-    public void updatePotion(Potion newPotion) {
-        this.potion = newPotion; // Update the potion
-        repaint(); // Repaint the screen with the new potion
-    }
-
-    // Method to update the NPC
-    public void updateNPC(Enemy enemy) {
-        this.enemy = enemy; // Update the NPC
-        repaint(); // Repaint the screen with the new NPC
-    }
-
-    private void drawScore(Graphics2D g2d) {
+    private void drawScore(Graphics2D g2d, int score) {
         // Enable anti-aliasing for smooth text
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Font settings

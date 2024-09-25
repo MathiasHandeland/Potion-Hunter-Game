@@ -21,6 +21,8 @@ public class Wizard implements IWizard {
 
     private final int boardWidth, boardHeight; // Size of the game board, should be the same as the size of the game window and not change during the game
 
+    private int wizardLives;
+
     /**
      * Constructor for the wizard.
      * The wizard is placed on the game board at the given x and y coordinates.
@@ -35,9 +37,20 @@ public class Wizard implements IWizard {
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
 
+        this.wizardLives = 3; // The wizard starts with 3 lives
+
         solidArea = new Rectangle(0, 0, 48, 48); // Size of the wizard
         loadSprites(); // Load the sprites
         currentSprite = down1; // Default sprite
+    }
+
+    // legg inn i IWizard
+    public int getWizardLives() {
+        return wizardLives;
+    }
+
+    public void decreaseWizardLives() {
+        wizardLives -= 1;
     }
 
     @Override
