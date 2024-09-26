@@ -72,7 +72,7 @@ public class GameMain {
                     case ACTIVE_GAME -> {
                         gameModel.update(gameController.upPressed, gameController.downPressed, 
                                          gameController.leftPressed, gameController.rightPressed);
-                        gameView.updateView();  // Update and repaint the game view
+                        gameView.repaint();  // Update and repaint the game view
                     }
                     case PAUSED_GAME -> gameView.paintPauseScreen(window.getGraphics());
                     case GAME_OVER -> {
@@ -81,13 +81,6 @@ public class GameMain {
                     }
                 }
                 delta--;
-            }
-    
-            // forklar hva denne gjør:
-            try {
-                Thread.sleep(1); // Sleep for a short duration
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

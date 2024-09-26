@@ -4,9 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import no.uib.inf101.model.GameState;
-import no.uib.inf101.model.Wizard;
-import no.uib.inf101.model.Enemy;
-import no.uib.inf101.model.Potion;
 
 /**
  * The view class for the game. Draws the game state on the screen.
@@ -15,10 +12,18 @@ public class GameView extends JPanel {
     
     private ViewableGameModel gameModel;
     private TileManager tileManager; // final?
-    private Image heartImage; // Image for lives
+    private Image heartImage; // The heart image to represent the lives is gathered from the internet at: https://opengameart.org/content/heart-pixel-art
     private ColorTheme colortheme; 
 
+    /**
+     * Constructor for the GameView class. Initializes the game model and the tile manager.
+     * 
+     * @param gameModel The game model to draw on the screen
+     * @param boardWidth The width of the game board
+     * @param boardHeight The height of the game board
+     */
     public GameView(ViewableGameModel gameModel, int boardWidth, int boardHeight) {
+        
         this.gameModel = gameModel;
         this.tileManager = new TileManager(); // The tile manager is used to draw the background
         this.colortheme = new DefaultColorTheme();
@@ -35,51 +40,38 @@ public class GameView extends JPanel {
 
         GameState gameState = gameModel.getGameState();
 
+        // Draw the game state based on the current game state
         switch (gameState) {
             case START_SCREEN -> paintStartScreen(g);
-            case ACTIVE_GAME -> {
-                // Draw the active game screen
-                tileManager.drawTiles(g, getWidth(), getHeight());
-
-                // Draw the wizard
-                Wizard wizard = gameModel.getWizard();
-                g.drawImage(wizard.getCurrentSprite(), wizard.getX(), wizard.getY(), wizard.getSolidArea().width, wizard.getSolidArea().height, null);
-
-                // Draw the potion if it's visible
-                Potion potion = gameModel.getPotion();
-                if (potion.getX() != -1 && potion.getY() != -1) {
-                    g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), potion.getSolidArea(), potion.getSolidArea(), null);
-                }
-
-                // Draw the enemy if it exists
-                Enemy enemy = gameModel.getEnemy();
-                if (enemy != null) {
-                    g.drawImage(enemy.getCurrentSprite(), enemy.getX(), enemy.getY(), enemy.getBounds().width, enemy.getBounds().height, null);
-                }
-
-                // Draw score and lives
-                drawScore((Graphics2D) g, gameModel.getScore());
-                drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
-            }
+            case ACTIVE_GAME -> paintActiveGame(g);
             case PAUSED_GAME -> paintPauseScreen(g);
             case GAME_OVER -> paintGameOverScreen(g);
         }
     }
     
-    public void updateView() {
-        repaint();
-    }
+    private void paintActiveGame(Graphics g) {
+        // Draw the active game screen
+        tileManager.drawTiles(g, getWidth(), getHeight());
 
-    // Draw lives using heart images or icons
-    private void drawLives(Graphics2D g2d, int wizardLives) {
-        int heartSize = 30; // Size of the heart icon
-        int spacing = 10;   // Spacing between heart icons
-        int xPosition = getWidth() - (wizardLives * (heartSize + spacing)) - 20; // Start drawing hearts on the top-right corner
-        int yPosition = 20; // Y position of the hearts
+        // Draw the wizard
+        g.drawImage(gameModel.getWizard().getCurrentSprite(), gameModel.getWizard().getX(), gameModel.getWizard().getY(), 
+            gameModel.getWizard().getSolidArea().width, gameModel.getWizard().getSolidArea().height, null);
 
-        for (int i = 0; i < wizardLives; i++) {
-            g2d.drawImage(heartImage, xPosition + i * (heartSize + spacing), yPosition, heartSize, heartSize, null);
+        // Draw the potion if it's visible
+        if (gameModel.getPotion().getX() != -1 && gameModel.getPotion().getY() != -1) {
+            g.drawImage(gameModel.getPotion().getCurrentSprite(), gameModel.getPotion().getX(), gameModel.getPotion().getY(), 
+                gameModel.getPotion().getSolidArea(), gameModel.getPotion().getSolidArea(), null);
         }
+
+        // Draw the enemy if it exists
+        if (gameModel.getEnemy() != null) {
+            g.drawImage(gameModel.getEnemy().getCurrentSprite(), gameModel.getEnemy().getX(), gameModel.getEnemy().getY(), 
+                gameModel.getEnemy().getBounds().width, gameModel.getEnemy().getBounds().height, null);
+        }
+
+        // Draw score and lives
+        drawScore((Graphics2D) g, gameModel.getScore());
+        drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
     }
 
     private void drawScore(Graphics2D g2d, int score) {
@@ -101,8 +93,19 @@ public class GameView extends JPanel {
         g2d.drawString(scoreText, 10, 40);  // Main score text
     }
 
+    private void drawLives(Graphics2D g2d, int wizardLives) {
+        int heartSize = 30; // Size of the heart icon
+        int spacing = 10;   // Spacing between heart icons
+        int xPosition = getWidth() - (wizardLives * (heartSize + spacing)) - 20; // Start drawing hearts on the top-right corner
+        int yPosition = 20; // Y position of the hearts
+
+        for (int i = 0; i < wizardLives; i++) {
+            g2d.drawImage(heartImage, xPosition + i * (heartSize + spacing), yPosition, heartSize, heartSize, null);
+        }
+    }
+
     public void paintStartScreen(Graphics g) {
-        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.setColor(colortheme.getBackgroundColor());
         g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
 
         g.setColor(colortheme.getGamestateTxtColor());
@@ -116,7 +119,7 @@ public class GameView extends JPanel {
     }
 
     public void paintGameOverScreen(Graphics g) {
-        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.setColor(colortheme.getBackgroundColor());
         g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
 
         g.setColor(colortheme.getGamestateTxtColor());
@@ -130,7 +133,7 @@ public class GameView extends JPanel {
     }
 
     public void paintPauseScreen(Graphics g) {
-        g.setColor(colortheme.getTransparentBackgroundColor());
+        g.setColor(colortheme.getBackgroundColor());
         g.fillRect(0, 0, gameModel.getBoardWidth(), gameModel.getBoardHeight());
 
         g.setColor(colortheme.getGamestateTxtColor());

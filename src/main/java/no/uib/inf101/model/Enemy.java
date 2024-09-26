@@ -5,37 +5,47 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class Enemy {
+/**
+ * Class representing an enemy character in the game.
+ * The enemy moves around the game board and tries to catch the wizard.
+ */
+public class Enemy implements IEnemy {
+    
     private int x, y;
     private BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     private BufferedImage currentSprite;
-    private Rectangle solidArea;  // Size and bounds of the enemy
-    private int speed = 1; // NPC speed
-    private int spriteCounter = 0; // Counter for sprite animation
-    private int spriteNum = 1;     // Alternate between two sprites for animation
-    private String direction = "down"; // Default direction
+    private Rectangle solidArea; 
+    private int speed = 1; 
+    private int spriteCounter = 0; // Counter used in sprite animation so that it changes every 10 frames
+    private int spriteNum = 1;     // Alternate between two sprites for animation. Initial sprite is 1
+    private String direction = "down"; // Default direction. The enemy starts moving down
 
-    private boolean isPaused = false; // Flag to indicate if the enemy is paused
-    private long pauseStartTime; // Start time for pause
-    private final long PAUSE_DURATION = 400; // Duration to pause in milliseconds
+    private boolean isPaused = false; // Indicates if the enemy is paused
+    private long pauseStartTime; // Represents the time when the enemy was paused
+    private final long PAUSE_DURATION = 400; // Duration to pause the enemy in milliseconds
 
-
-    // Add these fields for the game board dimensions
     private int boardWidth;
     private int boardHeight;
 
-    // Modify the constructor to take in boardWidth and boardHeight
+    /**
+     * Constructor for the enemy character
+     * The enemy character is created at the specified position
+     * @param startX 
+     * @param startY
+     * @param boardWidth
+     * @param boardHeight
+     */
     public Enemy(int startX, int startY, int boardWidth, int boardHeight) {
         this.x = startX;
         this.y = startY;
-        this.boardWidth = boardWidth;  // Store the board width
-        this.boardHeight = boardHeight;  // Store the board height
+        this.boardWidth = boardWidth; 
+        this.boardHeight = boardHeight; 
         this.solidArea = new Rectangle(0, 0, 48, 48); // Set enemy solidArea to 48x48
         loadSprites();
-        this.currentSprite = down1; // Set the default sprite
+        this.currentSprite = down1; // Default sprite is down1
     }
 
-    // Load NPC sprites
+    // The sprites for the enemy character are gathered from the youtuber RyiSnow at: https://drive.google.com/drive/folders/1UThk24Kl7zb0w0bHPTdcuy2iZnqPFa4a
     private void loadSprites() {
         try {
             up1 = ImageIO.read(getClass().getResource("/npc/oldman_up_1.png"));
@@ -51,7 +61,7 @@ public class Enemy {
         }
     }
 
-    // Update enemy position and sprite based on wizard's position
+    @Override
     public void update(int wizardX, int wizardY) {
         
         if (isPaused) {
@@ -104,30 +114,45 @@ public class Enemy {
         }
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public int getY() {
         return y;
     }
 
+    @Override
     public int getSpeed() {
         return speed;
     }
 
+    @Override
     public void setSpeed(int i) {
         this.speed = i;
     }
 
+    @Override
     public Rectangle getBounds() {
         return new Rectangle(x, y, solidArea.width, solidArea.height);
     }
 
+    @Override
     public BufferedImage getCurrentSprite() {
         return currentSprite;
     }
 
+    @Override
+    public void setPaused(boolean paused) {
+        this.isPaused = paused;
+        if (paused) {
+            this.pauseStartTime = System.currentTimeMillis(); // Record the start time
+        }
+    }
+
+    @Override
     public void reverseDirection() {
         switch (direction) {
             case "up":
@@ -163,19 +188,10 @@ public class Enemy {
         stopFromMovingOutside(); // Ensure it stays within bounds
     }
     
-    
-    // Helper method to prevent the enemy from going outside the game area
     private void stopFromMovingOutside() {
         if (x < 0) x = 0;
         if (x > boardWidth - solidArea.width) x = boardWidth - solidArea.width;
         if (y < 0) y = 0;
         if (y > boardHeight - solidArea.height) y = boardHeight - solidArea.height;
-    }
-
-    public void setPaused(boolean paused) {
-        this.isPaused = paused;
-        if (paused) {
-            this.pauseStartTime = System.currentTimeMillis(); // Record the start time
-        }
     }
 }

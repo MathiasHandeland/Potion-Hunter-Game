@@ -12,27 +12,13 @@ import java.awt.Color;
  */
 public class DefaultColorTheme implements ColorTheme {
 
-    /**
-     * Method to get a transparent background color.
-     * This color is used for the Gamestate WELCOME_SCREEN and 
-     * GAME_OVER and is used to make the text more readable because
-     * it is a transparent color placed on top of the game
-     * @return a new Color with the RGB values 0,0,0 and an alpha value
-     * of 128. The alfa value is used to make the color transparent.
-     */
     @Override
-    public Color getTransparentBackgroundColor() {
+    public Color getBackgroundColor() {
         return new Color(0, 0, 0, 128);
     }
 
-    /**
-     * Method to get the color of the text in the gamestate.
-     * This color is used for all gamestates.
-     * @return the Color WHITE.
-     */
     @Override
     public Color getGamestateTxtColor() {
         return Color.WHITE;
-    }
-    
+    }  
 }

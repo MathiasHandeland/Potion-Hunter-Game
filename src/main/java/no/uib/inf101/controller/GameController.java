@@ -12,7 +12,7 @@ import no.uib.inf101.model.GameState;
  */
 public class GameController extends KeyAdapter {
     
-    private ControlableGameModel gameModel;  // bytte til ControlableGameModel
+    private ControlableGameModel gameModel; 
     public boolean upPressed, downPressed, leftPressed, rightPressed; 
 
     /**

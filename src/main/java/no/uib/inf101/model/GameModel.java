@@ -6,11 +6,15 @@ import no.uib.inf101.controller.ControlableGameModel;
 import no.uib.inf101.view.ViewableGameModel;
 
 /**
- * GameModel class stores the game state and handles game logic.
+ * GameModel class stores the game state and handle the game logic.
  * Keeps instances of the wizard, potion, enemy, and other game objects.
  * Manages the score and the wizard's lives.
+ * Implements the ControlableGameModel and ViewableGameModel interfaces so
+ * that the GameView and GameController can interact with the game model and
+ * only access the necessary methods and fields they need.
  */
 public class GameModel implements ControlableGameModel, ViewableGameModel {
+    
     private Wizard wizard;
     private Potion potion;
     private Enemy enemy;
@@ -26,19 +30,10 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
      */
     public GameModel() {
         
-        // Initialize the game state
-        gameState = GameState.START_SCREEN; // Set the initial game state to the start screen
-
-        // Initialize the wizard at a specific location
+        gameState = GameState.START_SCREEN; 
         this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
-
-        // Spawn the first potion at a random position
         spawnNewPotion();
-
-        // Initialize enemy to null until the player collects potions
-        this.enemy = null;
-
-        // Initialize score to 0 because the player has not collected any potions yet
+        this.enemy = null; // Initially set to null because the enemy is not present at the start
         this.score = 0;
     }
 
@@ -46,7 +41,8 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
      * Updates the game state based on the user input.
      * Updates the wizard's position and checks for collisions with the potion and enemy.
      * Updates the enemy's position and checks for collisions with the wizard.
-     * Updates the game speed based on the score.
+     * Updates the wizards speed based on the score/amount of potions collected.
+     * Used in GameMain in the game loop to update the game based on game state.
      * @param upPressed 
      * @param downPressed
      * @param leftPressed
@@ -60,17 +56,16 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
                 enemy.update(wizard.getX(), wizard.getY());
                 checkEnemyCollision();
             }
-            updateSpeeds();
+            updateWizardSpeed();
         }
     }
 
     private void checkPotionCollision() {
         if (wizard.getBounds().intersects(potion.getBounds())) {
-            potion.remove();   // Remove the potion
-            score++;           // Increase the score
+            potion.removePotion();   
+            score++;           
 
-            // Spawn a new potion at a random location
-            spawnNewPotion();
+            spawnNewPotion(); // Spawn a new potion at a random location
 
             // After collecting 3 potions, spawn the enemy
             if (score == 3 && enemy == null) {
@@ -96,13 +91,12 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
 
     private void spawnNewPotion() {
         Random random = new Random();
-        int potionX = random.nextInt(BOARD_WIDTH - 32);  // Potion's width
-        int potionY = random.nextInt(BOARD_HEIGHT - 32); // Potion's height
+        int potionX = random.nextInt(BOARD_WIDTH - 32);  
+        int potionY = random.nextInt(BOARD_HEIGHT - 32); 
         potion = new Potion(potionX, potionY);
     }
 
-    // Method to update speeds based on score
-    private void updateSpeeds() {
+    private void updateWizardSpeed() {
         if (score == 10) {
             enemy.setSpeed(2);
             wizard.setSpeed(5);

@@ -12,8 +12,12 @@ import java.io.InputStream;
  * The tile image is loaded from the resources folder.
  */
 public class TileManager {
+
     private BufferedImage tileImage;
 
+    /**
+     * Constructor for the TileManager class. Loads the tile image.
+     */
     public TileManager() {
         loadTileImage();
     }
@@ -30,6 +34,15 @@ public class TileManager {
         }
     }
 
+    /**
+     * Draws the tile image to fill the entire background.
+     * Used in the paintComponent method in the GameView class
+     * to draw the background of the game.
+     * 
+     * @param g The graphics object to draw on
+     * @param width The width of the area to draw on
+     * @param height The height of the area to draw on
+     */
     public void drawTiles(Graphics g, int width, int height) {
         if (tileImage != null) {
             int tileWidth = tileImage.getWidth();

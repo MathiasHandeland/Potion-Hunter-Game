@@ -8,8 +8,10 @@ import java.io.IOException;
 /**
  * Class representing a wizard character in the game.
  * The wizard can move around the game board and has a sprite for each direction.
+ * The wizard implements the methods defined in IWizard interface 
  */
 public class Wizard implements IWizard {
+    
     private int x, y;
     private int speed = 4;
     private String direction = "down"; // Default direction
@@ -18,14 +20,14 @@ public class Wizard implements IWizard {
     private int spriteCounter = 0; // The sprite counter is used to change sprite every 10 frames, initially set to 0 so that the sprite is changed immediately
     private int spriteNum = 1; // The sprite number is used to alternate between two sprites for each direction to create an animation effect
     private Rectangle solidArea; // Represents the position and size of the wizard on the game board
-
-    private final int boardWidth, boardHeight; // Size of the game board, should be the same as the size of the game window and not change during the game
-
     private int wizardLives;
+
+    private final int boardWidth, boardHeight; 
 
     /**
      * Constructor for the wizard.
-     * The wizard is placed on the game board at the given x and y coordinates.
+     * The wizard is placed on the game board at the given x and y coordinates
+     * withing the given board width and height.
      * @param startX x-coordinate of the wizard
      * @param startY y-coordinate of the wizard
      * @param boardWidth width of the game board
@@ -34,26 +36,27 @@ public class Wizard implements IWizard {
     public Wizard(int startX, int startY, int boardWidth, int boardHeight) {
         this.x = startX; 
         this.y = startY;
+        this.wizardLives = 3; // The wizard starts with 3 lives
+        
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
 
-        this.wizardLives = 3; // The wizard starts with 3 lives
-
-        solidArea = new Rectangle(0, 0, 48, 48); // Size of the wizard
+        this.solidArea = new Rectangle(0, 0, 48, 48); // Size of the wizard
         loadSprites(); // Load the sprites
-        currentSprite = down1; // Default sprite
+        this.currentSprite = down1; // Default sprite
     }
 
-    // reset wizard lives
+    @Override
     public void resetWizardLives() {
         wizardLives = 3;
     }
 
-    // legg inn i IWizard
+    @Override
     public int getWizardLives() {
         return wizardLives;
     }
 
+    @Override
     public void decreaseWizardLives() {
         wizardLives -= 1;
     }
@@ -92,24 +95,7 @@ public class Wizard implements IWizard {
     public Rectangle getBounds() {
         return new Rectangle(x, y, solidArea.width, solidArea.height);
     }
-    
-    @Override
-    public void loadSprites() {
-        
-        try {
-            up1 = ImageIO.read(getClass().getResource("/player/wizard_up_1.png"));
-            up2 = ImageIO.read(getClass().getResource("/player/wizard_up_2.png"));
-            down1 = ImageIO.read(getClass().getResource("/player/wizard_down_1.png"));
-            down2 = ImageIO.read(getClass().getResource("/player/wizard_down_2.png"));
-            left1 = ImageIO.read(getClass().getResource("/player/wizard_left_1.png"));
-            left2 = ImageIO.read(getClass().getResource("/player/wizard_left_2.png"));
-            right1 = ImageIO.read(getClass().getResource("/player/wizard_right_1.png"));
-            right2 = ImageIO.read(getClass().getResource("/player/wizard_right_2.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }  
-    }  
-
+     
     @Override
     public void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
         
@@ -155,11 +141,26 @@ public class Wizard implements IWizard {
         }
     }
 
-    // Helper method to stop the wizard from moving outside the game board
     private void stopFromMovingOutside() {
         if (x < 0) x = 0;
         if (x > boardWidth - solidArea.width) x = boardWidth - solidArea.width;
         if (y < 0) y = 0;
         if (y > boardHeight - solidArea.height) y = boardHeight - solidArea.height;
     }
+
+    private void loadSprites() {
+        
+        try {
+            up1 = ImageIO.read(getClass().getResource("/player/wizard_up_1.png"));
+            up2 = ImageIO.read(getClass().getResource("/player/wizard_up_2.png"));
+            down1 = ImageIO.read(getClass().getResource("/player/wizard_down_1.png"));
+            down2 = ImageIO.read(getClass().getResource("/player/wizard_down_2.png"));
+            left1 = ImageIO.read(getClass().getResource("/player/wizard_left_1.png"));
+            left2 = ImageIO.read(getClass().getResource("/player/wizard_left_2.png"));
+            right1 = ImageIO.read(getClass().getResource("/player/wizard_right_1.png"));
+            right2 = ImageIO.read(getClass().getResource("/player/wizard_right_2.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }  
+    } 
 }

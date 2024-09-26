@@ -18,42 +18,49 @@ public interface ViewableGameModel {
     
     /**
      * Get the current game state.
+     * 
      * @return the current game state
      */
     GameState getGameState();
 
     /**
      * Get the wizard object.
+     * 
      * @return the wizard object
      */
     Wizard getWizard();
 
     /**
      * Get the potion object.
+     * 
      * @return the potion object
      */
     Potion getPotion();
 
     /**
      * Get the enemy object.
+     * 
      * @return the enemy object
      */
     Enemy getEnemy();
     
     /**
      * Get the score.
+     * 
      * @return the score
      */
     int getScore();
 
     /**
      * Get the width of the game board.
+     * 
      * @return the width of the game board
      */
     int getBoardWidth();
 
     /**
      * Get the height of the game board.
+     *
      * @return the height of the game board
      */
     int getBoardHeight();
