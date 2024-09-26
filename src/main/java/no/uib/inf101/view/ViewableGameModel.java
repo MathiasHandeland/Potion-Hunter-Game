@@ -4,6 +4,7 @@ import no.uib.inf101.model.Enemy;
 import no.uib.inf101.model.GameState;
 import no.uib.inf101.model.Potion;
 import no.uib.inf101.model.Wizard;
+import java.util.List;
 
 /**
  * The ViewableGameModel interface contains the methods from the model
@@ -35,7 +36,7 @@ public interface ViewableGameModel {
      * 
      * @return the potion object
      */
-    Potion getPotion();
+    public List<Potion> getPotions();
 
     /**
      * Get the enemy object.

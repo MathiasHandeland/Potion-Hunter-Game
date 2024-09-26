@@ -4,6 +4,8 @@ import java.util.Random;
 
 import no.uib.inf101.controller.ControlableGameModel;
 import no.uib.inf101.view.ViewableGameModel;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * GameModel class stores the game state and handle the game logic.
@@ -16,10 +18,13 @@ import no.uib.inf101.view.ViewableGameModel;
 public class GameModel implements ControlableGameModel, ViewableGameModel {
     
     private Wizard wizard;
-    private Potion potion;
+    private List<Potion> potions;
     private Enemy enemy;
     private int score;      
     private GameState gameState;
+
+    private long lastPotionSpawnTime = System.currentTimeMillis();
+    private final long potionSpawnInterval = 10000; // 10 seconds
 
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 600;
@@ -32,6 +37,7 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
         
         gameState = GameState.START_SCREEN; 
         this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
+        this.potions = new ArrayList<>();
         spawnNewPotion();
         this.enemy = null; // Initially set to null because the enemy is not present at the start
         this.score = 0;
@@ -61,16 +67,33 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
     }
 
     private void checkPotionCollision() {
-        if (wizard.getBounds().intersects(potion.getBounds())) {
-            potion.removePotion();   
-            score++;           
-
-            spawnNewPotion(); // Spawn a new potion at a random location
-
-            // After collecting 3 potions, spawn the enemy
-            if (score == 3 && enemy == null) {
-                enemy = new Enemy(100, 100, BOARD_WIDTH, BOARD_HEIGHT);
+        for (Potion potion : potions) {
+            if (wizard.getBounds().intersects(potion.getBounds())) {
+                potion.removePotion();
+                score++;
+                potions.remove(potion); // Remove the collected potion
+                spawnNewPotion(); // Spawn a new potion at a random location
+                break; // Exit the loop after collecting a potion
             }
+        }
+    
+        // Spawn a new potion every 5 potions collected
+        spawnExtraPotion();
+    
+        // After collecting 3 potions, spawn the enemy
+        spawnEnemy();
+    }   
+    
+    private void spawnEnemy() {
+        if (score == 3 && enemy == null) {
+            enemy = new Enemy(100, 100, BOARD_WIDTH, BOARD_HEIGHT);
+        }
+    }
+
+    private void spawnExtraPotion() {
+        if (System.currentTimeMillis() - lastPotionSpawnTime >= potionSpawnInterval && score > 0) {
+            spawnNewPotion();
+            lastPotionSpawnTime = System.currentTimeMillis();
         }
     }
 
@@ -93,23 +116,37 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
         Random random = new Random();
         int potionX = random.nextInt(BOARD_WIDTH - 32);  
         int potionY = random.nextInt(BOARD_HEIGHT - 32); 
-        potion = new Potion(potionX, potionY);
+        potions.add(new Potion(potionX, potionY)); // Add new potion to the list
     }
 
     private void updateWizardSpeed() {
-        if (score == 10) {
-            enemy.setSpeed(2);
-            wizard.setSpeed(5);
-        }
-        if (score == 20) {
-            enemy.setSpeed(3);
-            wizard.setSpeed(6);
-        }
-        if (score == 25) {
-            enemy.setSpeed(4);
-            wizard.setSpeed(8);
+        switch (score) {
+            case 10:
+                enemy.setSpeed(2);
+                wizard.setSpeed(5);
+                break;
+            case 20:
+                enemy.setSpeed(3);
+                wizard.setSpeed(6);
+                break;
+            case 25:
+                enemy.setSpeed(4);
+                wizard.setSpeed(8);
+                break;
+            case 40:
+                enemy.setSpeed(5);
+                wizard.setSpeed(10);
+                break;
+            case 50:
+                enemy.setSpeed(6);
+                wizard.setSpeed(12);
+                break;
+            default:
+            
+                break;
         }
     }
+    
 
     @Override
     public Wizard getWizard() {
@@ -117,8 +154,8 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
     }
 
     @Override
-    public Potion getPotion() {
-        return potion;
+    public List<Potion> getPotions() {
+        return potions;
     }
 
     @Override
@@ -158,6 +195,7 @@ public class GameModel implements ControlableGameModel, ViewableGameModel {
         this.wizard.resetWizardLives(); // Reset lives
     
         // Reset the potion
+        this.potions.clear();
         spawnNewPotion();
     
         // Reset the enemy to null (not present at the start)

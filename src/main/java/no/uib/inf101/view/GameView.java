@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import no.uib.inf101.model.GameState;
+import no.uib.inf101.model.Potion;
 
 /**
  * The view class for the game. Draws the game state on the screen.
@@ -50,29 +51,32 @@ public class GameView extends JPanel {
     }
     
     private void paintActiveGame(Graphics g) {
-        // Draw the active game screen
-        tileManager.drawTiles(g, getWidth(), getHeight());
+    // Draw the active game screen
+    tileManager.drawTiles(g, getWidth(), getHeight());
 
-        // Draw the wizard
-        g.drawImage(gameModel.getWizard().getCurrentSprite(), gameModel.getWizard().getX(), gameModel.getWizard().getY(), 
-            gameModel.getWizard().getSolidArea().width, gameModel.getWizard().getSolidArea().height, null);
+    // Draw the wizard
+    g.drawImage(gameModel.getWizard().getCurrentSprite(), gameModel.getWizard().getX(), gameModel.getWizard().getY(), 
+        gameModel.getWizard().getSolidArea().width, gameModel.getWizard().getSolidArea().height, null);
 
-        // Draw the potion if it's visible
-        if (gameModel.getPotion().getX() != -1 && gameModel.getPotion().getY() != -1) {
-            g.drawImage(gameModel.getPotion().getCurrentSprite(), gameModel.getPotion().getX(), gameModel.getPotion().getY(), 
-                gameModel.getPotion().getSolidArea(), gameModel.getPotion().getSolidArea(), null);
+    // Draw all potions
+    for (Potion potion : gameModel.getPotions()) {
+        if (potion.getX() != -1 && potion.getY() != -1) {
+            g.drawImage(potion.getCurrentSprite(), potion.getX(), potion.getY(), 
+                potion.getSolidArea(), potion.getSolidArea(), null);
         }
-
-        // Draw the enemy if it exists
-        if (gameModel.getEnemy() != null) {
-            g.drawImage(gameModel.getEnemy().getCurrentSprite(), gameModel.getEnemy().getX(), gameModel.getEnemy().getY(), 
-                gameModel.getEnemy().getBounds().width, gameModel.getEnemy().getBounds().height, null);
-        }
-
-        // Draw score and lives
-        drawScore((Graphics2D) g, gameModel.getScore());
-        drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
     }
+
+    // Draw the enemy if it exists
+    if (gameModel.getEnemy() != null) {
+        g.drawImage(gameModel.getEnemy().getCurrentSprite(), gameModel.getEnemy().getX(), gameModel.getEnemy().getY(), 
+            gameModel.getEnemy().getBounds().width, gameModel.getEnemy().getBounds().height, null);
+    }
+
+    // Draw score and lives
+    drawScore((Graphics2D) g, gameModel.getScore());
+    drawLives((Graphics2D) g, gameModel.getWizard().getWizardLives());
+}
+
 
     private void drawScore(Graphics2D g2d, int score) {
         // Enable anti-aliasing for smooth text
