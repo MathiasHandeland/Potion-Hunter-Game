@@ -3,7 +3,6 @@ package no.uib.inf101.view;
 import java.awt.*;
 import javax.swing.*;
 
-import no.uib.inf101.model.GameModel;
 import no.uib.inf101.model.GameState;
 import no.uib.inf101.model.Wizard;
 import no.uib.inf101.model.Enemy;
@@ -14,12 +13,12 @@ import no.uib.inf101.model.Potion;
  */
 public class GameView extends JPanel {
     
-    private final GameModel gameModel;
-    private final TileManager tileManager; 
+    private ViewableGameModel gameModel;
+    private TileManager tileManager; // final?
     private Image heartImage; // Image for lives
     private ColorTheme colortheme; 
 
-    public GameView(GameModel gameModel, int boardWidth, int boardHeight) {
+    public GameView(ViewableGameModel gameModel, int boardWidth, int boardHeight) {
         this.gameModel = gameModel;
         this.tileManager = new TileManager(); // The tile manager is used to draw the background
         this.colortheme = new DefaultColorTheme();

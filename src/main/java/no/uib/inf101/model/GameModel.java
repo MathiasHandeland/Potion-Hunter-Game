@@ -2,21 +2,28 @@ package no.uib.inf101.model;
 
 import java.util.Random;
 
+import no.uib.inf101.controller.ControlableGameModel;
+import no.uib.inf101.view.ViewableGameModel;
+
 /**
  * GameModel class stores the game state and handles game logic.
  * Keeps instances of the wizard, potion, enemy, and other game objects.
  * Manages the score and the wizard's lives.
  */
-public class GameModel {
+public class GameModel implements ControlableGameModel, ViewableGameModel {
     private Wizard wizard;
     private Potion potion;
     private Enemy enemy;
-    private int score;       // Player's score
+    private int score;      
     private GameState gameState;
 
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 600;
 
+    /**
+     * Constructor for the GameModel class.
+     * Initializes the game state, wizard, potion, enemy, and score.
+     */
     public GameModel() {
         
         // Initialize the game state
@@ -35,50 +42,16 @@ public class GameModel {
         this.score = 0;
     }
 
-    public void resetGame() {
-        // Reset wizard's position and lives
-        this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
-        this.wizard.resetWizardLives(); // Reset lives
-    
-        // Reset the potion
-        spawnNewPotion();
-    
-        // Reset the enemy to null (not present at the start)
-        this.enemy = null;
-    
-        // Reset the score
-        this.score = 0;
-    
-        // Set the game state back to START_SCREEN
-        setGameState(GameState.START_SCREEN); // Initially set to START_SCREEN; it will change to ACTIVE_GAME on restart
-    }
-
-    // get the current game state
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    // set the game state
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-            //ikke bruk for tror eg
-    // reset the game state to the start screen
-    public void resetGameState() {
-        this.gameState = GameState.START_SCREEN;
-    }
-
-    // method to get the board width
-    public int getBoardWidth() {
-        return BOARD_WIDTH;
-    }
-
-    // method to get the board height
-    public int getBoardHeight() {
-        return BOARD_HEIGHT;
-    }
-
-    // Updates the game state based on current input
+    /**
+     * Updates the game state based on the user input.
+     * Updates the wizard's position and checks for collisions with the potion and enemy.
+     * Updates the enemy's position and checks for collisions with the wizard.
+     * Updates the game speed based on the score.
+     * @param upPressed 
+     * @param downPressed
+     * @param leftPressed
+     * @param rightPressed
+     */
     public void update(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
         if (gameState == GameState.ACTIVE_GAME) {
             wizard.update(upPressed, downPressed, leftPressed, rightPressed);
@@ -91,7 +64,6 @@ public class GameModel {
         }
     }
 
-    // Method to check collision with the potion and update the score
     private void checkPotionCollision() {
         if (wizard.getBounds().intersects(potion.getBounds())) {
             potion.remove();   // Remove the potion
@@ -107,7 +79,6 @@ public class GameModel {
         }
     }
 
-    // Method to check collision between wizard and enemy
     private void checkEnemyCollision() {
         if (wizard.getBounds().intersects(enemy.getBounds())) {
             // Decrease wizard's lives
@@ -123,7 +94,6 @@ public class GameModel {
         }
     }
 
-    // Method to spawn a new potion at a random location
     private void spawnNewPotion() {
         Random random = new Random();
         int potionX = random.nextInt(BOARD_WIDTH - 32);  // Potion's width
@@ -147,23 +117,62 @@ public class GameModel {
         }
     }
 
-    // Getters for game elements used in the view
+    @Override
     public Wizard getWizard() {
         return wizard;
     }
 
+    @Override
     public Potion getPotion() {
         return potion;
     }
 
+    @Override
     public Enemy getEnemy() {
         return enemy;
     }
 
+    @Override
     public int getScore() {
         return score;
     }
+
+    @Override
+    public int getBoardWidth() {
+        return BOARD_WIDTH;
+    }
+
+    @Override
+    public int getBoardHeight() {
+        return BOARD_HEIGHT;
+    }
+
+    @Override
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    @Override
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+  
+    @Override
+    public void resetGame() {
+        // Reset wizard's position and lives
+        this.wizard = new Wizard(336, 240, BOARD_WIDTH, BOARD_HEIGHT);
+        this.wizard.resetWizardLives(); // Reset lives
+    
+        // Reset the potion
+        spawnNewPotion();
+    
+        // Reset the enemy to null (not present at the start)
+        this.enemy = null;
+    
+        // Reset the score
+        this.score = 0;
+    
+        // Set the game state back to START_SCREEN
+        setGameState(GameState.START_SCREEN); // Initially set to START_SCREEN; it will change to ACTIVE_GAME on restart
+    }
 }
-
-
-

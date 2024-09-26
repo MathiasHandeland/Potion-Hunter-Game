@@ -2,7 +2,7 @@ package no.uib.inf101.controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import no.uib.inf101.model.GameModel;
+
 import no.uib.inf101.model.GameState;
 
 /**
@@ -12,14 +12,14 @@ import no.uib.inf101.model.GameState;
  */
 public class GameController extends KeyAdapter {
     
-    private final GameModel gameModel;  // bytte til ControlableGameModel
+    private ControlableGameModel gameModel;  // bytte til ControlableGameModel
     public boolean upPressed, downPressed, leftPressed, rightPressed; 
 
     /**
      * Constructor for the GameController class.
      * @param gameModel The game model that the controller will interact with.
      */
-    public GameController(GameModel gameModel) {
+    public GameController(ControlableGameModel gameModel) {
         this.gameModel = gameModel;
     }
 
