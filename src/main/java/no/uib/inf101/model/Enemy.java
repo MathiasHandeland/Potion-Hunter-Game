@@ -48,14 +48,15 @@ public class Enemy implements IEnemy {
     // The sprites for the enemy character are gathered from the youtuber RyiSnow at: https://drive.google.com/drive/folders/1UThk24Kl7zb0w0bHPTdcuy2iZnqPFa4a
     private void loadSprites() {
         try {
-            up1 = ImageIO.read(getClass().getResource("/npc/oldman_up_1.png"));
-            up2 = ImageIO.read(getClass().getResource("/npc/oldman_up_2.png"));
-            down1 = ImageIO.read(getClass().getResource("/npc/oldman_down_1.png"));
-            down2 = ImageIO.read(getClass().getResource("/npc/oldman_down_2.png"));
-            left1 = ImageIO.read(getClass().getResource("/npc/oldman_left_1.png"));
-            left2 = ImageIO.read(getClass().getResource("/npc/oldman_left_2.png"));
-            right1 = ImageIO.read(getClass().getResource("/npc/oldman_right_1.png"));
-            right2 = ImageIO.read(getClass().getResource("/npc/oldman_right_2.png"));
+            up1 = ImageIO.read(getClass().getResource("/orc/orc_up_1.png"));
+            up2 = ImageIO.read(getClass().getResource("/orc/orc_up_2.png"));
+            down1 = ImageIO.read(getClass().getResource("/orc/orc_down_1.png"));
+            down2 = ImageIO.read(getClass().getResource("/orc/orc_down_2.png"));
+            left1 = ImageIO.read(getClass().getResource("/orc/orc_left_1.png"));
+            left2 = ImageIO.read(getClass().getResource("/orc/orc_left_2.png"));
+            right1 = ImageIO.read(getClass().getResource("/orc/orc_right_1.png"));
+            right2 = ImageIO.read(getClass().getResource("/orc/orc_right_2.png"));
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
