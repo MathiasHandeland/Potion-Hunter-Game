@@ -1,4 +1,4 @@
-package no.uib.inf101.model;
+package game.model;
 
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;

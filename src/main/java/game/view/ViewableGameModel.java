@@ -1,9 +1,9 @@
-package no.uib.inf101.view;
+package game.view;
 
-import no.uib.inf101.model.Enemy;
-import no.uib.inf101.model.GameState;
-import no.uib.inf101.model.Potion;
-import no.uib.inf101.model.Wizard;
+import game.model.Enemy;
+import game.model.GameState;
+import game.model.Potion;
+import game.model.Wizard;
 import java.util.List;
 
 /**

@@ -1,9 +1,9 @@
-package no.uib.inf101.model;
+package game.model;
 
 import java.util.Random;
 
-import no.uib.inf101.controller.ControlableGameModel;
-import no.uib.inf101.view.ViewableGameModel;
+import game.controller.ControlableGameModel;
+import game.view.ViewableGameModel;
 import java.util.List;
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package no.uib.inf101.view;
+package game.view;
 // University of Bergen INF101 helper methods for graphics with Swing.
 // Methods for drawing images are adapted with permission from
 // https://kosbie.net/cmu/spring-08/15-100/handouts/DrawImageFromFile.java

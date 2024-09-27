@@ -1,4 +1,4 @@
-package no.uib.inf101.view;
+package game.view;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

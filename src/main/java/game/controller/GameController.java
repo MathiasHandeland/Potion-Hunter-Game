@@ -1,9 +1,9 @@
-package no.uib.inf101.controller;
+package game.controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import no.uib.inf101.model.GameState;
+import game.model.GameState;
 
 /**
  * This class is responsible for handling user input and updating the game state

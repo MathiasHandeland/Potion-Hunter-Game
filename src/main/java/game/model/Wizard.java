@@ -1,4 +1,4 @@
-package no.uib.inf101.model;
+package game.model;
 
 import javax.imageio.ImageIO;
 import java.awt.Rectangle;

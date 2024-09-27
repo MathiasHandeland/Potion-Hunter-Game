@@ -1,4 +1,4 @@
-package no.uib.inf101.model;
+package game.model;
 
 /**
  * enum for the different states of the game

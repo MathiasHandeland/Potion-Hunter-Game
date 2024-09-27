@@ -1,11 +1,11 @@
-package no.uib.inf101;
+package game;
 
 import javax.swing.*;
 
-import no.uib.inf101.view.GameView;
-import no.uib.inf101.controller.GameController;
-import no.uib.inf101.model.GameModel;
-import no.uib.inf101.model.GameState;
+import game.view.GameView;
+import game.controller.GameController;
+import game.model.GameModel;
+import game.model.GameState;
 
 /**
  * Main class for the game. Sets up the game window and starts the game loop.

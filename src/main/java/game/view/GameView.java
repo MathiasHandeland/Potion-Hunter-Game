@@ -1,10 +1,10 @@
-package no.uib.inf101.view;
+package game.view;
 
 import java.awt.*;
 import javax.swing.*;
 
-import no.uib.inf101.model.GameState;
-import no.uib.inf101.model.Potion;
+import game.model.GameState;
+import game.model.Potion;
 
 /**
  * The view class for the game. Draws the game state on the screen.

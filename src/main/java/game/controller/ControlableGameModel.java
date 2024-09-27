@@ -1,7 +1,7 @@
-package no.uib.inf101.controller;
+package game.controller;
 
-import no.uib.inf101.model.GameState;
-import no.uib.inf101.model.Wizard;
+import game.model.GameState;
+import game.model.Wizard;
 
 /**
  * The ControlableGameModel interface contains the methods from the 
