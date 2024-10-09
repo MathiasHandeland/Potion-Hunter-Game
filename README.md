@@ -2,7 +2,7 @@
 
 ## Description
 
-**Potion Hunter** is a fun and interactive 2D game single-player game developed in Java. The game is set in a magical world where the player controls a wizard who is on a quest to collect potions while avoiding the orc enemy. 
+**Potion Hunter** is a fun and interactive 2D game single-player game developed by me in Java. The game is set in a magical world where the player controls a wizard who is on a quest to collect potions while avoiding the orc enemy. 
 
 ## Features
 - **Dynamic potion spawning:** Potions are spawned at random locations on the screen to make the game more challenging.
